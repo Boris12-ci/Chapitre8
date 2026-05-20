@@ -5,16 +5,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.Year; // Ne pas oublier cet import
+import java.time.Year;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;   // Ne pas oublier cet import
+import java.util.Map;
 
-// IMPORT DE ASSERTJ
+// Import AssertJ
 import static org.assertj.core.api.Assertions.assertThat;
 
+// Imports JUnit
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -25,7 +26,7 @@ public class BookShelfSpec {
     private Book effectiveJava;
     private Book codeComplete;
     private Book mythicalManMonth;
-    private Book cleanCode; // Nouveau livre
+    private Book cleanCode;
 
     @BeforeEach
     void init() {
@@ -97,7 +98,6 @@ public class BookShelfSpec {
                 () -> "Books in a bookshelf should be arranged chronologically by publication date");
     }
 
-    // NOUVEAU TEST (Page 81/82) - Il va s'afficher en rouge car la méthode n'existe pas
     @Test
     @DisplayName("books inside bookshelf are grouped by publication year")
     void groupBooksInsideBookShelfByPublicationYear() {
@@ -107,5 +107,17 @@ public class BookShelfSpec {
         assertThat(booksByPublicationYear).containsKey(Year.of(2008)).containsValues(Arrays.asList(effectiveJava, cleanCode));
         assertThat(booksByPublicationYear).containsKey(Year.of(2004)).containsValues(Collections.singletonList(codeComplete));
         assertThat(booksByPublicationYear).containsKey(Year.of(1975)).containsValues(Collections.singletonList(mythicalManMonth));
+    }
+
+    @Test
+    @DisplayName("Les livres à l'intérieur de la bibliothèque sont regroupés selon les critères fournis par l'utilisateur (regroupés par nom d'auteur)")
+    void groupBooksByUserProvidedCriteria() {
+        shelf.add(effectiveJava, codeComplete, mythicalManMonth, cleanCode);
+        Map<String, List<Book>> booksByAuthor = shelf.groupBy(Book::getAuthor);
+
+        assertThat(booksByAuthor).containsKey("Joshua Bloch").containsValues(Collections.singletonList(effectiveJava));
+        assertThat(booksByAuthor).containsKey("Steve McConnel").containsValues(Collections.singletonList(codeComplete));
+        assertThat(booksByAuthor).containsKey("Frederick Phillips Brooks").containsValues(Collections.singletonList(mythicalManMonth));
+        assertThat(booksByAuthor).containsKey("Robert C. Martin").containsValues(Collections.singletonList(cleanCode));
     }
 }
