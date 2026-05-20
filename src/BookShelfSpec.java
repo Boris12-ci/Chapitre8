@@ -39,7 +39,7 @@ public class BookShelfSpec {
     void bookshelfArrangedByUserProvidedCriteria() {
         shelf.add(effectiveJava, codeComplete, mythicalManMonth);
         List<Book> books = shelf.arrange(Comparator.comparing(Book::getTitle).reversed());
-        assertEquals(Arrays.asList(mythicalManMonth, effectiveJava, codeComplete), books, () -> "Books in bookshelf are in insertion order");
+        assertEquals(Arrays.asList(mythicalManMonth, effectiveJava, codeComplete), books, () -> "Books in bookshelf are arranged by user criteria");
     }
 
     @Test
