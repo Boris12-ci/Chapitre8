@@ -18,6 +18,7 @@ public class BookShelfSpec {
     private Book effectiveJava;
     private Book codeComplete;
     private Book mythicalManMonth;
+    private Book cleanCode;
 
     @BeforeEach
     void init() {
@@ -25,6 +26,8 @@ public class BookShelfSpec {
         effectiveJava = new Book("Effective Java", "Joshua Bloch", LocalDate.of(2008, Month.MAY, 8));
         codeComplete = new Book("Code Complete", "Steve McConnel", LocalDate.of(2004, Month.JUNE, 9));
         mythicalManMonth = new Book("The Mythical Man-Month", "Frederick Phillips Brooks", LocalDate.of(1975, Month.JANUARY, 1));
+        // Initialisation de cleanCode
+        cleanCode = new Book("Clean Code", "Robert C. Martin", LocalDate.of(2008, Month.AUGUST, 1));
     }
 
     @Test
@@ -73,9 +76,20 @@ public class BookShelfSpec {
         List<Book> books = shelf.arrange(Comparator.<Book>naturalOrder().reversed());
         assertEquals(Arrays.asList(mythicalManMonth, effectiveJava, codeComplete), books, () -> "Books in a bookshelf are arranged in descending order of book title");
     }
+
     @Test
     void arrangeEmptyBookShelfReturnsEmptyList() {
         List<Book> books = shelf.arrange();
         assertTrue(books.isEmpty(), () -> "Arranging an empty bookshelf should return an empty list");
+    }
+
+    @Test
+    void bookshelfArrangedByBookPublicationDate() {
+        shelf.add(effectiveJava, codeComplete, mythicalManMonth, cleanCode);
+
+        List<Book> books = shelf.arrange(Comparator.comparing(Book::getPublishedOn));
+
+        assertEquals(Arrays.asList(mythicalManMonth, codeComplete, effectiveJava, cleanCode), books,
+                () -> "Books in a bookshelf should be arranged chronologically by publication date");
     }
 }
