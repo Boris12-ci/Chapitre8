@@ -28,18 +28,16 @@ public class BookShelfSpec {
     }
 
     @Test
-    void booksInBookShelfAreInInsertionOrderAfterCallingArrange() {
-        shelf.add(effectiveJava, codeComplete, mythicalManMonth);
-        shelf.arrange();
+    void shelfEmptyWhenNoBookAdded() {
         List<Book> books = shelf.books();
-        assertEquals(Arrays.asList(effectiveJava, codeComplete, mythicalManMonth), books, () -> "Books in bookshelf are in insertion order");
+        assertTrue(books.isEmpty(), () -> "BookShelf should be empty when no books are added");
     }
 
     @Test
-    void bookshelfArrangedByUserProvidedCriteria() {
-        shelf.add(effectiveJava, codeComplete, mythicalManMonth);
-        List<Book> books = shelf.arrange(Comparator.comparing(Book::getTitle).reversed());
-        assertEquals(Arrays.asList(mythicalManMonth, effectiveJava, codeComplete), books, () -> "Books in bookshelf are arranged by user criteria");
+    void bookshelfContainsTwoBooksWhenTwoBooksAdded() {
+        shelf.add(effectiveJava, codeComplete);
+        List<Book> books = shelf.books();
+        assertEquals(2, books.size(), () -> "BookShelf should contain two books");
     }
 
     @Test
@@ -59,5 +57,20 @@ public class BookShelfSpec {
         shelf.add(effectiveJava, codeComplete, mythicalManMonth);
         List<Book> books = shelf.arrange();
         assertEquals(Arrays.asList(codeComplete, effectiveJava, mythicalManMonth), books, () -> "Books in a bookshelf should be arranged lexicographically by book title");
+    }
+
+    @Test
+    void booksInBookShelfAreInInsertionOrderAfterCallingArrange() {
+        shelf.add(effectiveJava, codeComplete, mythicalManMonth);
+        shelf.arrange();
+        List<Book> books = shelf.books();
+        assertEquals(Arrays.asList(effectiveJava, codeComplete, mythicalManMonth), books, () -> "Books in bookshelf are in insertion order");
+    }
+
+    @Test
+    void bookshelfArrangedByUserProvidedCriteria() {
+        shelf.add(effectiveJava, codeComplete, mythicalManMonth);
+        List<Book> books = shelf.arrange(Comparator.<Book>naturalOrder().reversed());
+        assertEquals(Arrays.asList(mythicalManMonth, effectiveJava, codeComplete), books, () -> "Books in a bookshelf are arranged in descending order of book title");
     }
 }
