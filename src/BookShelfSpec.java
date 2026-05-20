@@ -2,11 +2,18 @@ package bookstoread;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.Year; // Ne pas oublier cet import
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;   // Ne pas oublier cet import
+
+// IMPORT DE ASSERTJ
+import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,7 +25,7 @@ public class BookShelfSpec {
     private Book effectiveJava;
     private Book codeComplete;
     private Book mythicalManMonth;
-    private Book cleanCode;
+    private Book cleanCode; // Nouveau livre
 
     @BeforeEach
     void init() {
@@ -26,7 +33,6 @@ public class BookShelfSpec {
         effectiveJava = new Book("Effective Java", "Joshua Bloch", LocalDate.of(2008, Month.MAY, 8));
         codeComplete = new Book("Code Complete", "Steve McConnel", LocalDate.of(2004, Month.JUNE, 9));
         mythicalManMonth = new Book("The Mythical Man-Month", "Frederick Phillips Brooks", LocalDate.of(1975, Month.JANUARY, 1));
-        // Initialisation de cleanCode
         cleanCode = new Book("Clean Code", "Robert C. Martin", LocalDate.of(2008, Month.AUGUST, 1));
     }
 
@@ -86,10 +92,20 @@ public class BookShelfSpec {
     @Test
     void bookshelfArrangedByBookPublicationDate() {
         shelf.add(effectiveJava, codeComplete, mythicalManMonth, cleanCode);
-
         List<Book> books = shelf.arrange(Comparator.comparing(Book::getPublishedOn));
-
         assertEquals(Arrays.asList(mythicalManMonth, codeComplete, effectiveJava, cleanCode), books,
                 () -> "Books in a bookshelf should be arranged chronologically by publication date");
+    }
+
+    // NOUVEAU TEST (Page 81/82) - Il va s'afficher en rouge car la méthode n'existe pas
+    @Test
+    @DisplayName("books inside bookshelf are grouped by publication year")
+    void groupBooksInsideBookShelfByPublicationYear() {
+        shelf.add(effectiveJava, codeComplete, mythicalManMonth, cleanCode);
+        Map<Year, List<Book>> booksByPublicationYear = shelf.groupByPublicationYear();
+
+        assertThat(booksByPublicationYear).containsKey(Year.of(2008)).containsValues(Arrays.asList(effectiveJava, cleanCode));
+        assertThat(booksByPublicationYear).containsKey(Year.of(2004)).containsValues(Collections.singletonList(codeComplete));
+        assertThat(booksByPublicationYear).containsKey(Year.of(1975)).containsValues(Collections.singletonList(mythicalManMonth));
     }
 }

@@ -1,9 +1,11 @@
 package bookstoread;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BookShelf {
@@ -19,15 +21,19 @@ public class BookShelf {
         }
     }
 
-    // La méthode sans paramètre réutilise maintenant la méthode principale
     public List<Book> arrange() {
         return arrange(Comparator.naturalOrder());
     }
 
-    // Toute la logique de tri de l'étagère est centralisée ici
     public List<Book> arrange(Comparator<Book> criteria) {
         return books.stream()
                 .sorted(criteria)
                 .collect(Collectors.toList());
+    }
+
+    // NOUVELLE MÉTHODE : Regroupement par année de publication
+    public Map<Year, List<Book>> groupByPublicationYear() {
+        return books.stream().collect(Collectors.groupingBy(book ->
+                Year.of(book.getPublishedOn().getYear())));
     }
 }
