@@ -19,12 +19,12 @@ public class BookShelf {
         }
     }
 
+    // La méthode sans paramètre réutilise maintenant la méthode principale
     public List<Book> arrange() {
-        return books.stream()
-                .sorted(Comparator.comparing(Book::getTitle))
-                .collect(Collectors.toList());
+        return arrange(Comparator.naturalOrder());
     }
 
+    // Toute la logique de tri de l'étagère est centralisée ici
     public List<Book> arrange(Comparator<Book> criteria) {
         return books.stream()
                 .sorted(criteria)
